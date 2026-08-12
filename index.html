@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <title>Enterprise ERP Dashboard</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --border-color: #e2e8f0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: var(--primary);
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .output-box {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>Enterprise Resource Planning (ERP)</h2>
+    <span id="system-status">Status: Connected</span>
+  </header>
+
+  <div class="container">
+    <div class="grid">
+      
+      <!-- 1. Financial Management -->
+      <div class="card">
+        <h3>1. Financials</h3>
+        <p id="fin-data">Loading financial insights...</p>
+        <button onclick="loadFinance()">Refresh Financials</button>
+      </div>
+
+      <!-- 2. Human Resources -->
+      <div class="card">
+        <h3>2. Human Resources</h3>
+        <p id="hr-data">Loading HR statistics...</p>
+        <button onclick="loadHR()">Refresh HR</button>
+      </div>
+
+      <!-- 3. Supply Chain & Manufacturing -->
+      <div class="card">
+        <h3>3. Supply Chain & Mfg</h3>
+        <p id="scm-data">Loading SCM logs...</p>
+        <button onclick="loadSCM()">Refresh SCM</button>
+      </div>
+
+      <!-- 4. CRM -->
+      <div class="card">
+        <h3>4. CRM & Sales</h3>
+        <p id="crm-data">Loading pipeline data...</p>
+        <button onclick="loadCRM()">Refresh CRM</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Automatically load data when page opens
+    window.onload = function() {
+      loadFinance();
+      loadHR();
+      loadSCM();
+      loadCRM();
+    };
+
+    function loadFinance() {
+      google.script.run
+        .withSuccessHandler(function(data) {
+          document.getElementById('fin-data').innerHTML = `
+            Revenue: <b>${data.totalRevenue}</b><br>
+            Pending Invoices: <b>${data.pendingInvoices}</b><br>
+            Expenses: <b>${data.monthlyExpenses}</b>
+          `;
+        })
+        .getFinanceData();
+    }
+
+    function loadHR() {
+      google.script.run
+        .withSuccessHandler(function(data) {
+          document.getElementById('hr-data').innerHTML = `
+            Total Staff: <b>${data.totalEmployees}</b><br>
+            Onboarding: <b>${data.activeOnboarding}</b><br>
+            Payroll: <b>${data.payrollStatus}</b>
+          `;
+        })
+        .getHRData();
+    }
+
+    function loadSCM() {
+      google.script.run
+        .withSuccessHandler(function(data) {
+          document.getElementById('scm-data').innerHTML = `
+            Low Stock Alerts: <b>${data.lowStockItems}</b><br>
+            Active Work Orders: <b>${data.activeWorkOrders}</b><br>
+            Suppliers: <b>${data.suppliersCount}</b>
+          `;
+        })
+        .getSCMData();
+    }
+
+    function loadCRM() {
+      google.script.run
+        .withSuccessHandler(function(data) {
+          document.getElementById('crm-data').innerHTML = `
+            Active Leads: <b>${data.activeLeads}</b><br>
+            Open Tickets: <b>${data.openSupportTickets}</b><br>
+            Converted Today: <b>${data.convertedClientsToday}</b>
+          `;
+        })
+        .getCRMData();
+    }
+  </script>
+
+</body>
+</html>
